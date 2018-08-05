@@ -52,7 +52,9 @@ class Popular extends React.Component {
 
 	// the function that will update the state of the component
 	updateLanguage(lang) {
-		// this.setState will overwrite this.state with the returned object
+		// this.setState will get the returned object and overwrite the
+		// matched keys of the current state with the values returned
+
 		this.setState(function() {
 			// we return the new state where the 'selectedLanguage' is the language we passed
 			return {
