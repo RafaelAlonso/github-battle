@@ -1,4 +1,37 @@
 var React = require('react');
+var PropTypes = require('prop-types');
+
+// SelectLanguage is a Component with only the render() method,
+// so it can be writen as a function
+function SelectLanguage (props) {
+	let languages = ['All', 'Javascript', 'Ruby', 'Java', 'CSS', 'Python']
+	return (
+		// return a list
+		// we use 'className' to classes because the word 'Class' is reserved
+		<ul className='languages'>
+			{/* We map the array, returning an array of <li> */}
+			{languages.map((language) => {
+				return (
+					// the property 'key' is needed and needs to be unique
+					<li 
+						style={language === props.selectedLanguage ? {color: '#d0021b'} : null}
+						onClick={props.onSelect.bind(null, language)}
+						key={language}
+					>
+						{language}
+					</li>
+				)
+			})}
+		</ul>
+	)
+}
+
+// specify what are the types of the props that we are expecting for SelectLanguage
+SelectLanguage.propTypes = {
+	selectedLanguage: PropTypes.string.isRequired,
+	onSelect: PropTypes.func.isRequired
+}
+
 
 class Popular extends React.Component {
 	// To set / get a State of a Component, we need to instantiate the constructor
@@ -31,25 +64,11 @@ class Popular extends React.Component {
 	// the function to render the component
 	render (){
 		// just an array of strings
-		let languages = ['All', 'Javascript', 'Ruby', 'Java', 'CSS', 'Python']
 		return (
-			// return a list
-			// we use 'className' to classes because the word 'Class' is reserved
-			<ul className='languages'>
-				{/* We map the array, returning an array of <li> */}
-				{languages.map((language) => {
-					return (
-						// the property 'key' is needed and needs to be unique
-						<li 
-							style={language === this.state.selectedLanguage ? {color: '#d0021b'} : null}
-							onClick={this.updateLanguage.bind(null, language)}
-							key={language}
-						>
-							{language}
-						</li>
-					)
-				})}
-			</ul>
+			<SelectLanguage
+				selectedLanguage={this.state.selectedLanguage}
+				onSelect={this.updateLanguage}
+			/>
 		)
 	}
 }
