@@ -1,6 +1,7 @@
 var React = require('react');
 var PropTypes = require('prop-types');
 var Link = require('react-router-dom').Link;
+var PlayerPreview = require('./PlayerPreview');
 
 class PlayerInput extends React.Component {
 	constructor(props){
@@ -51,28 +52,6 @@ PlayerInput.propTypes = {
 	id: PropTypes.string.isRequired,
 	label: PropTypes.string.isRequired,
 	onSubmit: PropTypes.func.isRequired
-}
-
-
-function PlayerPreview(props) {
-	return (
-		<div className="column">
-			<img 
-				src={props.image}
-				alt={props.username}
-				className="avatar"
-			/>
-			<h2>@{props.username}</h2>
-			<button className='reset' onClick={props.onReset.bind(null, props.id)}>Reset</button>
-		</div>
-	)
-}
-
-PlayerPreview.propTypes = {
-	image: PropTypes.string.isRequired,
-	username: PropTypes.string.isRequired,
-	id: PropTypes.string.isRequired,
-	onReset: PropTypes.func.isRequired
 }
 
 class Battle extends React.Component {
@@ -129,9 +108,9 @@ class Battle extends React.Component {
 						<PlayerPreview
 							image={playerOneImage}
 							username={playerOneName}
-							id='playerOne'
-							onReset={this.handleReset}
-						/>
+						>
+							<button className='reset' onClick={this.handleReset.bind(null, 'playerOne')}>Reset</button>
+						</PlayerPreview>
 					}
 
 					{!playerTwoName && 
@@ -146,9 +125,9 @@ class Battle extends React.Component {
 						<PlayerPreview
 							image={playerTwoImage}
 							username={playerTwoName}
-							id='playerTwo'
-							onReset={this.handleReset}
-						/>
+						>
+							<button className='reset' onClick={this.handleReset.bind(null, 'playerTwo')}>Reset</button>
+						</PlayerPreview>
 					}
 				</div>
 				{playerOneImage && playerTwoImage &&
