@@ -1,6 +1,7 @@
 var React = require('react');
 var PropTypes = require('prop-types');
 var api = require('../utils/api');
+var Loading = require('./Loading');
 
 // SelectLanguage is a Component with only the render() method,
 // so it can be writen as a function
@@ -135,7 +136,7 @@ class Popular extends React.Component {
 				/>
 				{ this.state.repos 
 					? <RepoGrid repos={this.state.repos} />
-					: <p>Loading</p>
+					: <Loading />
 				}
 			</div>
 		)
