@@ -8,11 +8,11 @@ class PlayerInput extends React.Component {
 		id: PropTypes.string.isRequired,
 		label: PropTypes.string.isRequired,
 		onSubmit: PropTypes.func.isRequired
-	}
+	};
 
 	static defaultProps = {
 		label: 'username'
-	}
+	};
 
 	state = {
 		username: ''

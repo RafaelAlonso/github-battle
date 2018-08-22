@@ -1,12 +1,12 @@
-var React = require('react');
-var PropTypes = require('prop-types');
-var api = require('../utils/api');
-var Loading = require('./Loading');
+import React from 'react'
+import PropTypes from 'prop-types'
+import api from '../utils/api'
+import Loading from './Loading'
 
 // SelectLanguage is a Component with only the render() method,
 // so it can be writen as a function
-function SelectLanguage (props) {
-	let languages = ['All', 'Javascript', 'Ruby', 'Java', 'CSS', 'Python']
+const SelectLanguage = (props) => {
+	const languages = ['All', 'Javascript', 'Ruby', 'Java', 'CSS', 'Python']
 	return (
 		// return a list
 		// we use 'className' to classes because the word 'Class' is reserved
@@ -35,31 +35,28 @@ SelectLanguage.propTypes = {
 }
 
 
-function RepoGrid (props) {
-	return (
-		<ul className="grid">
-			{props.repos.map(function(repo, index){
-				return (
-					<li key={repo.name} className='popular-item'>
-						<div className="popular-rank">#{index + 1}</div>
-						<ul className="space-list-items">
-							<li>
-								<img 
-									className='avatar'
-									src={repo.owner.avatar_url}
-									alt={'Avatar for ' + repo.owner.login}
-								/>
-							</li>
-							<li><a href={repo.html_url}>{repo.name}</a></li>
-							<li>@{repo.owner.login}</li>
-							<li>{repo.stargazers_count} stars</li>
-						</ul>
+const RepoGrid = (props) => (
+	<ul className="grid">
+		{props.repos.map((repo, index) => (
+			<li key={repo.name} className='popular-item'>
+				<div className="popular-rank">#{index + 1}</div>
+				<ul className="space-list-items">
+					<li>
+						<img 
+							className='avatar'
+							src={repo.owner.avatar_url}
+							alt={'Avatar for ' + repo.owner.login}
+						/>
 					</li>
-				)
-			})}
-		</ul>
-	)
-}
+					<li><a href={repo.html_url}>{repo.name}</a></li>
+					<li>@{repo.owner.login}</li>
+					<li>{repo.stargazers_count} stars</li>
+				</ul>
+			</li>
+			)
+		)}
+	</ul>
+)
 
 RepoGrid.propTypes = {
 	repos: PropTypes.array.isRequired,
@@ -77,7 +74,7 @@ RepoGrid.propTypes = {
 
 	Obs.: When it does not have a state, it's called a Stateless Component.
 */
-class Popular extends React.Component {
+export default class Popular extends React.Component {
 	// To set / get a State of a Component, we need to instantiate the constructor
 	constructor(props){
 		// Always call super(props)
@@ -142,5 +139,3 @@ class Popular extends React.Component {
 		)
 	}
 }
-
-module.exports = Popular;
