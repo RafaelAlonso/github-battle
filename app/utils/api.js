@@ -1,59 +1,42 @@
-var axios = require('axios');
-
-function getProfile(username){
-	return axios.get('https://api.github.com/users/' + username).then(user => user.data);
+async function getProfile(username){
+	const response = await fetch(`https://api.github.com/users/${username}`);
+	return response.json();
 }
 
-function getRepos(username){
-	return axios.get('https://api.github.com/users/' + username + '/repos');
+async function getRepos(username){
+	const response = await fetch(`https://api.github.com/users/${username}/repos`);
+	return response.json();
 }
 
-function getStars(repos){
-	return repos.data.reduce(function (count, repo) {
-    return count + repo.stargazers_count + 1
-  }, 0);
-}
-
-function getScore(user, repos){
-	let followers = user.followers;
-	let stars = getStars(repos);
-
-	return (followers * 3) + stars;
-}
-
-function handleError(error){
-	console.log(error);
-	return null;
-}
-
-function getUserData(player){
-	return axios.all([
-		getProfile(player),
-		getRepos(player)
-	]).then(function(data) {
-		let profile = data[0];
-		let repos = data[1];
-
-		return {
-			profile: profile,
-			score: getScore(profile, repos)
-		}
-	})
-}
-
-function sortPlayers(players){
-	return players.sort((a,b) => {return a.score < b.score})
-}
-
-module.exports = {
-	battle: function(players){
-		return axios.all(players.map(getUserData))
-		.then(sortPlayers)
-		.catch(handleError)
-	},
-	fetchPopularRepos: function(lang){
-		let encodedUri = window.encodeURI('https://api.github.com/search/repositories?q=stars:>1+language:' + lang + '&sort=stars&order=desc&type=Repositories');
-
-		return axios.get(encodedUri).then(response => response.data.items);
+async function getUserData(player){
+	const [ profile, repos ] = await Promise.all([getProfile(player), getRepos(player)]);
+	return {
+		profile: profile,
+		score: getScore(profile, repos)
 	}
+}
+
+export async function fetchPopularRepos(lang){
+	const encodedUri = window.encodeURI(`https://api.github.com/search/repositories?q=stars:>1+language:${lang}&sort=stars&order=desc&type=Repositories`);
+	const response = await fetch(encodedUri)
+	const repos = await response.json();
+	return repos.items;
+}
+
+export async function battle(players){
+	const response = await Promise.all(players.map(getUserData)).catch(handleError);
+	return response === null
+    ? response
+    : sortPlayers(response);
+}
+
+const getStars = (repos) => repos.reduce((count, repo) => count + repo.stargazers_count + 1, 0);
+
+const getScore = (user, repos) => (user.followers * 3) + getStars(repos);
+
+const sortPlayers = (players) => players.sort((a,b) => a.score < b.score )
+
+const handleError = (error) => {
+	console.warn(error);
+	return null;
 }
