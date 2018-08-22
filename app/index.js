@@ -1,7 +1,7 @@
-var React = require('react');
-var ReactDom = require('react-dom');
+import React from 'react'
+import ReactDom from 'react-dom'
+import App from './components/App'
 require('./index.css');
-var App = require('./components/App');
 
 
 ReactDom.render(

@@ -1,86 +1,74 @@
-var React = require('react');
-var PropTypes = require('prop-types');
-var Link = require('react-router-dom').Link;
-var PlayerPreview = require('./PlayerPreview');
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
+import PlayerPreview from './PlayerPreview'
 
 class PlayerInput extends React.Component {
-	constructor(props){
-		super(props);
-
-		this.state = {
-			username: ''
-		}
-
-		this.updateUsername = this.updateUsername.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
+	static propTypes = {
+		id: PropTypes.string.isRequired,
+		label: PropTypes.string.isRequired,
+		onSubmit: PropTypes.func.isRequired
 	}
 
-	updateUsername(event){
-		let name = event.target.value;
-		this.setState(() => {
-			return {
-				username: name
-			}
-		})
+	static defaultProps = {
+		label: 'username'
 	}
 
-	handleSubmit(event){
+	state = {
+		username: ''
+	}
+
+	updateUsername = (event) => {
+		const name = event.target.value;
+		this.setState(() => ({ username: name }) )
+	}
+
+	handleSubmit = (event) => {
 		event.preventDefault();
 
 		this.props.onSubmit(this.props.id, this.state.username)
 	}
 
 	render(){
+		const { username } = this.state;
+		const { label }		 = this.props;
 		return (
 			<form className="column" onSubmit={this.handleSubmit}>
-				<label className="header" htmlFor={this.props.id}>{this.props.label}</label>
+				<label className="header" htmlFor='username'>{label}</label>
 				<input 
 					type="text" 
 					placeholder="github username"
 					id={this.props.id}
-					value={this.state.username}
+					value={username}
 					onChange={this.updateUsername}
 					autoComplete='off'
 				/>
-				<button className="button" type="submit" disabled={!this.state.username}>Submit</button>
+				<button className="button" type="submit" disabled={!username}>Submit</button>
 			</form>
 		)
 	}
 }
 
-PlayerInput.propTypes = {
-	id: PropTypes.string.isRequired,
-	label: PropTypes.string.isRequired,
-	onSubmit: PropTypes.func.isRequired
-}
-
-class Battle extends React.Component {
-	constructor(props){
-		super(props);
-
-		this.state = {
-			'playerOneName': '',
-			'playerTwoName': '',
-			'playerOneImage': null,
-			'playerTwoImage': null
-		}
-
-		this.updatePlayer = this.updatePlayer.bind(this);
-		this.handleReset = this.handleReset.bind(this);
+export default class Battle extends React.Component {
+	state = {
+		'playerOneName': '',
+		'playerTwoName': '',
+		'playerOneImage': null,
+		'playerTwoImage': null
 	}
 
-	updatePlayer(id, username){
+	updatePlayer = (id, username) => {
 		this.setState(() => {
-			let newPlayer = {};
+			const newPlayer = {};
 			newPlayer[id + 'Name'] = username;
 			newPlayer[id + 'Image'] = 'https://www.github.com/' + username + '.png?size=200';
 			return newPlayer;
 		})
 	}
 
-	handleReset(id){
+	handleReset = (id) => {
 		this.setState(() => {
-			let newPlayer = {};
+			const newPlayer = {};
 			newPlayer[id + 'Name'] = '';
 			newPlayer[id + 'Image'] = null;
 			return newPlayer;
@@ -88,11 +76,9 @@ class Battle extends React.Component {
 	}
 
 	render(){
-		let match = this.props.match;
-		let playerOneName = this.state.playerOneName;
-		let playerTwoName = this.state.playerTwoName;
-		let playerOneImage = this.state.playerOneImage;
-		let playerTwoImage = this.state.playerTwoImage;
+		const { match } = this.props;
+		const { playerOneName, playerTwoName, playerOneImage, playerTwoImage } = this.state;
+		
 		return(
 			<div className="battle-container">
 				<div className="row">
@@ -109,7 +95,7 @@ class Battle extends React.Component {
 							image={playerOneImage}
 							username={playerOneName}
 						>
-							<button className='reset' onClick={this.handleReset.bind(null, 'playerOne')}>Reset</button>
+							<button className='reset' onClick={() => this.handleReset('playerOne')}>Reset</button>
 						</PlayerPreview>
 					}
 
@@ -126,7 +112,7 @@ class Battle extends React.Component {
 							image={playerTwoImage}
 							username={playerTwoName}
 						>
-							<button className='reset' onClick={this.handleReset.bind(null, 'playerTwo')}>Reset</button>
+							<button className='reset' onClick={() => this.handleReset('playerTwo')}>Reset</button>
 						</PlayerPreview>
 					}
 				</div>
@@ -145,5 +131,3 @@ class Battle extends React.Component {
 		)
 	}
 }
-
-module.exports = Battle;
